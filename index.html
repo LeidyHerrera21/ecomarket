@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EcoMarket — Tienda Orgánica</title>
+  <link rel="icon" type="image/png" href="https://stamegnaretail.com/wp-content/uploads/2018/11/delpierre-1.png">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top shadow-sm">
+  <div class="container">
+    <a class="navbar-brand" href="#">EcoMarket</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMain">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navMain">
+      <form class="d-flex ms-3 flex-fill" id="searchForm" onsubmit="event.preventDefault(); applySearch();">
+        <input id="searchInput" class="form-control me-2" type="search" placeholder="Buscar productos..." aria-label="Buscar">
+        <button class="btn btn-outline-success me-2" type="button" onclick="applySearch()">Buscar</button>
+        
+      </form>
+      <ul class="navbar-nav ms-auto align-items-center">
+        <li class="nav-item"><button class="btn btn-eco ms-2" id="btnShowCart" onclick="toggleCart()"><span>🛒</span> <span id="cartCount" class="badge bg-danger">0</span></button></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<header class="hero bg-gradient text-white py-5">
+  <div class="container d-flex align-items-center">
+    <div class="flex-fill">
+      <h1 class="display-6">Productos orgánicos directos de la granja</h1>
+      <p class="lead">Frutas, verduras, granos y más — frescura y calidad en cada pedido.</p>
+      <a href="#products" class="btn btn-light btn-lg">Comprar ahora</a>
+    </div>
+    <div class="d-none d-md-block ms-4">
+      <img src="https://stamegnaretail.com/wp-content/uploads/2018/11/delpierre-1.png" alt="eco" class="img-fluid rounded-3 shadow-sm hero-img">
+    </div>
+  </div>
+</header>
+
+<main class="container my-5">
+  <section id="products">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h2>Productos destacados</h2>
+      <div class="form-inline">
+        <select id="filterCategory" class="form-select me-2" onchange="applyFilters()">
+          <option value="">Todas las categorías</option>
+          <option value="fruta">Frutas</option>
+          <option value="verdura">Verduras</option>
+          <option value="grano">Granos</option>
+          <option value="bebidas">Bebidas</option>
+          <option value="endulzantes">Endulzantes</option>
+        </select>
+        <button class="btn btn-outline-secondary" onclick="resetFilters()">Limpiar</button>
+      </div>
+    </div>
+    <div id="productGrid" class="row g-3"></div>
+  </section>
+</main>
+
+<!-- Carrito fuera del lienzo -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="cartOffcanvas">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title">Tu carrito</h5>
+    <button type="button" class="btn-close" onclick="toggleCart()"></button>
+  </div>
+  <div class="offcanvas-body d-flex flex-column">
+    <div id="cartItems" class="mb-3"></div>
+    <div class="mt-auto">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <strong>Total:</strong>
+        <h4 id="cartTotal">S/ 0.00</h4>
+      </div>
+      <div class="d-grid gap-2">
+        <button class="btn btn-success" onclick="openCheckout()">Pagar</button>
+        <button class="btn btn-outline-secondary" onclick="clearCart()">Vaciar carrito</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de pago -->
+<div class="modal fade" id="checkoutModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Confirmar pedido</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <p>Revisa tu pedido y genera un código QR para pagar con <strong>Yape</strong> o <strong>Plin</strong>.</p>
+        <div id="checkoutSummary"></div>
+        <hr>
+        <div class="mb-3">
+          <label for="payPhone" class="form-label">Número Yape/Plin (ej: +519XXXXXXXX)</label>
+          <input class="form-control" id="payPhone" placeholder="+519XXXXXXXX">
+        </div>
+        <div class="mb-3">
+          <label for="payAmount" class="form-label">Monto (S/)</label>
+          <input class="form-control" id="payAmount" type="number" step="0.01" min="0">
+        </div>
+        <div>
+          <button class="btn btn-primary" onclick="generatePaymentQR()">Generar QR de pago</button>
+        </div>
+        <div class="mt-3 text-center" id="qrContainer" style="min-height:160px"></div>
+        <p class="small text-muted mt-2">Algunas apps pueden requerir que el comercio/agente registre el cobro previamente.</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="bg-light py-4 mt-5">
+  <div class="container text-center">
+    <small>© EcoMarket - Tienda de productos orgánicos</small>
+  </div>
+</footer>
+
+<!-- Dependencias -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
