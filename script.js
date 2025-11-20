@@ -148,44 +148,56 @@ function showToast(msg){
   setTimeout(()=>el.remove(), 2500);
 }
 
-// Generar un código QR para el pago
+// ========================
+// QR de pago universal + botones Yape/Plin
+// ========================
 let currentQR = null;
-function generatePaymentQR(){
+
+function generatePaymentQR() {
   const phone = document.getElementById('payPhone').value.trim();
   const amount = parseFloat(document.getElementById('payAmount').value || 0).toFixed(2);
   const qrContainer = document.getElementById('qrContainer');
-  qrContainer.innerHTML = '';
-  if(!phone || amount<=0){
+
+  qrContainer.innerHTML = "";
+
+  if (!phone || amount <= 0) {
     qrContainer.innerHTML = '<div class="text-danger">Ingrese un número y un monto válidos.</div>';
     return;
   }
-  // Crea una carga útil fácil de usar y una carga útil «universal»; aplicaciones como Yape/Plin suelen aceptar simplemente un teléfono + importe.
-  const payload = `PAYMENT|phone:${phone}|amount:${amount}|ref:EcoMarket-${Date.now()}`;
-  // Use qrcode.js to draw
-  currentQR = new QRCode(qrContainer, { text: payload, width: 200, height:200 });
-  // Mostrar también un enlace copiable (no es un enlace oficial de Yape/Plin, pero resulta útil).
-  const link = document.createElement('div');
-  link.className = 'mt-2';
-  link.innerHTML = `<input class="form-control" readonly value="${payload}" onclick="this.select()">`;
-  qrContainer.appendChild(link);
-  showToast('QR generado. Abre Yape o Plin y escanéalo.');
-}
+  // Payload universal
+  const payload = `PAGO|numero:${phone}|monto:${amount}|ref:EcoMarket-${Date.now()}`;
 
-// Filtros y búsqueda
-function applyFilters(){
-  const cat = document.getElementById('filterCategory').value;
-  let filtered = PRODUCTS.slice();
-  if(cat) filtered = filtered.filter(p=>p.category===cat);
-  renderProducts(filtered);
-}
+  // Crear QR
+  currentQR = new QRCode(qrContainer, {
+    text: payload,
+    width: 200,
+    height: 200
+  });
 
-function resetFilters(){ document.getElementById('filterCategory').value=''; renderProducts(); }
+  // Cuadro para copiar
+  const box = document.createElement('div');
+  box.className = "mt-3";
+  box.innerHTML = `
+    <label class="form-label">Datos para copiar:</label>
+    <input class="form-control text-center" readonly value="${payload}" onclick="this.select()">
+    <small class="text-muted">Copia este código si la app no lee el QR.</small>
+  `;
+  qrContainer.appendChild(box);
 
-function applySearch(){
-  const q = document.getElementById('searchInput').value.trim().toLowerCase();
-  if(!q) return renderProducts();
-  const filtered = PRODUCTS.filter(p => p.title.toLowerCase().includes(q) || p.category.toLowerCase().includes(q));
-  renderProducts(filtered);
+  // Botones abrir Yape/Plin
+  const buttons = document.createElement('div');
+  buttons.className = "mt-4 d-flex flex-column gap-2";
+
+  buttons.innerHTML = `
+    <button class="btn btn-primary w-100" onclick="openYape('${phone}', '${amount}')">
+      Abrir Yape
+    </button>
+    <button class="btn btn-info w-100" onclick="openPlin('${phone}', '${amount}')">
+      Abrir Plin
+    </button>
+  `;
+
+  qrContainer.appendChild(buttons);
 }
 
 // Init
@@ -231,6 +243,3 @@ document.addEventListener("DOMContentLoaded", () => {
       productContainer.innerHTML = "<p class='text-danger'>Error al cargar productos.</p>";
     });
 });
-
-
-    
