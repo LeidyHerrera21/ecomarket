@@ -1,10 +1,10 @@
 // Datos del producto de demostración
 const PRODUCTS = [
-  {id: 'p1', title:'Manzana(1kg)', price: 6.50, category: 'fruta', img:'https://images.unsplash.com/photo-1567306226416-28f0efdc88ce?q=80&w=600&auto=format&fit=crop&crop=entropy'},
-  {id: 'p2', title:'Plátano (1kg)', price: 4.00, category: 'fruta', img:'https://dontorcuatomarket.com/cdn/shop/products/1_500x.png?v=1587158137'},
-  {id: 'p3', title:'Zanahoria (500g)', price: 3.00, category: 'verdura', img:'https://previews.123rf.com/images/gdolgikh/gdolgikh1709/gdolgikh170900523/86269945-fresh-organic-carrot.jpg'},
-  {id: 'p4', title:'Quinua (500g)', price: 8.00, category: 'grano', img:'https://e-an.americatv.com.pe/util-e-interesante-hallan-pesticidas-quinua-peruana-que-se-vende-como-organica-n498454-938x528-1086861.jpg'},
-  {id: 'p5', title:'Lechuga', price: 2.50, category: 'verdura', img:'https://www.gastronomiavasca.net/uploads/image/file/3381/lechuga.jpg'},
+  {id: 'p1', title:'Manzana Roja Orgánica (1kg)', price: 6.50, category: 'fruta', img:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQt44MAmOguJRjxfhr5dnUHUj1twfKteG0Sv3comPjWB7T0uinvjmY0WdrBvQT-vrpiAWk&usqp=CAU'},
+  {id: 'p2', title:'Plátano orgánico (1kg)', price: 4.00, category: 'fruta', img:'https://dontorcuatomarket.com/cdn/shop/products/1_500x.png?v=1587158137'},
+  {id: 'p3', title:'Zanahoria orgánica (500g)', price: 3.00, category: 'verdura', img:'https://previews.123rf.com/images/gdolgikh/gdolgikh1709/gdolgikh170900523/86269945-fresh-organic-carrot.jpg'},
+  {id: 'p4', title:'Quinua orgánica (500g)', price: 8.00, category: 'grano', img:'https://e-an.americatv.com.pe/util-e-interesante-hallan-pesticidas-quinua-peruana-que-se-vende-como-organica-n498454-938x528-1086861.jpg'},
+  {id: 'p5', title:'Lechuga orgánica', price: 2.50, category: 'verdura', img:'https://www.gastronomiavasca.net/uploads/image/file/3381/lechuga.jpg'},
   {id: 'p6', title:'Inka kola en lata ', price: 1.00, category: 'bebidas', img:'https://thumbs.dreamstime.com/b/un-taz%C3%B3n-lleno-de-latas-peruanas-inca-kola-la-haya-pa%C3%ADses-bajos-abril-una-las-bebidas-m%C3%A1s-populares-en-per%C3%BA-es-probablemente-160359740.jpg'},
   {id: 'p7', title:'Arroz ', price: 2.00, category: 'grano', img:'https://cofepasa.com/wp-content/uploads/2021/04/arroz-portal.jpg'},
   {id: 'p8', title:'Maiz', price: 3.00, category: 'grano', img:'https://humanidades.com/wp-content/uploads/2018/10/maiz-2-1-e1581908276964.jpg'},
@@ -148,56 +148,44 @@ function showToast(msg){
   setTimeout(()=>el.remove(), 2500);
 }
 
-// ========================
-// QR de pago universal + botones Yape/Plin
-// ========================
+// Generar un código QR para el pago
 let currentQR = null;
-
-function generatePaymentQR() {
+function generatePaymentQR(){
   const phone = document.getElementById('payPhone').value.trim();
   const amount = parseFloat(document.getElementById('payAmount').value || 0).toFixed(2);
   const qrContainer = document.getElementById('qrContainer');
-
-  qrContainer.innerHTML = "";
-
-  if (!phone || amount <= 0) {
+  qrContainer.innerHTML = '';
+  if(!phone || amount<=0){
     qrContainer.innerHTML = '<div class="text-danger">Ingrese un número y un monto válidos.</div>';
     return;
   }
-  // Payload universal
-  const payload = `PAGO|numero:${phone}|monto:${amount}|ref:EcoMarket-${Date.now()}`;
+  // Crea una carga útil fácil de usar y una carga útil «universal»; aplicaciones como Yape/Plin suelen aceptar simplemente un teléfono + importe.
+  const payload = `PAYMENT|phone:${phone}|amount:${amount}|ref:EcoMarket-${Date.now()}`;
+  // Use qrcode.js to draw
+  currentQR = new QRCode(qrContainer, { text: payload, width: 200, height:200 });
+  // Mostrar también un enlace copiable (no es un enlace oficial de Yape/Plin, pero resulta útil).
+  const link = document.createElement('div');
+  link.className = 'mt-2';
+  link.innerHTML = `<input class="form-control" readonly value="${payload}" onclick="this.select()">`;
+  qrContainer.appendChild(link);
+  showToast('QR generado. Abre Yape o Plin y escanéalo.');
+}
 
-  // Crear QR
-  currentQR = new QRCode(qrContainer, {
-    text: payload,
-    width: 200,
-    height: 200
-  });
+// Filtros y búsqueda
+function applyFilters(){
+  const cat = document.getElementById('filterCategory').value;
+  let filtered = PRODUCTS.slice();
+  if(cat) filtered = filtered.filter(p=>p.category===cat);
+  renderProducts(filtered);
+}
 
-  // Cuadro para copiar
-  const box = document.createElement('div');
-  box.className = "mt-3";
-  box.innerHTML = `
-    <label class="form-label">Datos para copiar:</label>
-    <input class="form-control text-center" readonly value="${payload}" onclick="this.select()">
-    <small class="text-muted">Copia este código si la app no lee el QR.</small>
-  `;
-  qrContainer.appendChild(box);
+function resetFilters(){ document.getElementById('filterCategory').value=''; renderProducts(); }
 
-  // Botones abrir Yape/Plin
-  const buttons = document.createElement('div');
-  buttons.className = "mt-4 d-flex flex-column gap-2";
-
-  buttons.innerHTML = `
-    <button class="btn btn-primary w-100" onclick="openYape('${phone}', '${amount}')">
-      Abrir Yape
-    </button>
-    <button class="btn btn-info w-100" onclick="openPlin('${phone}', '${amount}')">
-      Abrir Plin
-    </button>
-  `;
-
-  qrContainer.appendChild(buttons);
+function applySearch(){
+  const q = document.getElementById('searchInput').value.trim().toLowerCase();
+  if(!q) return renderProducts();
+  const filtered = PRODUCTS.filter(p => p.title.toLowerCase().includes(q) || p.category.toLowerCase().includes(q));
+  renderProducts(filtered);
 }
 
 // Init
@@ -243,3 +231,83 @@ document.addEventListener("DOMContentLoaded", () => {
       productContainer.innerHTML = "<p class='text-danger'>Error al cargar productos.</p>";
     });
 });
+
+// ======================== VALIDACIÓN EN TIEMPO REAL ========================
+
+const contactForm = document.getElementById("contactForm");
+const fields = {
+  name: document.getElementById("contactName"),
+  email: document.getElementById("contactEmail"),
+  topic: document.getElementById("contactTopic"),
+  message: document.getElementById("contactMessage")
+};
+
+function validateName() {
+  const valid = fields.name.value.trim().length >= 3;
+  updateFieldState(fields.name, valid);
+  return valid;
+}
+
+function validateEmail() {
+  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const valid = regex.test(fields.email.value.trim());
+  updateFieldState(fields.email, valid);
+  return valid;
+}
+
+function validateTopic() {
+  const valid = fields.topic.value.trim() !== "";
+  updateFieldState(fields.topic, valid);
+  return valid;
+}
+
+function validateMessage() {
+  const valid = fields.message.value.trim().length >= 10;
+  updateFieldState(fields.message, valid);
+  return valid;
+}
+
+function updateFieldState(field, isValid) {
+  if (isValid) {
+    field.classList.remove("is-invalid");
+    field.classList.add("is-valid");
+  } else {
+    field.classList.remove("is-valid");
+    field.classList.add("is-invalid");
+  }
+}
+
+// Validación en tiempo real
+fields.name.addEventListener("input", validateName);
+fields.email.addEventListener("input", validateEmail);
+fields.topic.addEventListener("change", validateTopic);
+fields.message.addEventListener("input", validateMessage);
+
+// Enviar formulario
+contactForm.addEventListener("submit", e => {
+  e.preventDefault();
+
+  const validForm =
+    validateName() &
+    validateEmail() &
+    validateTopic() &
+    validateMessage();
+
+  if (validForm) {
+    document.getElementById("contactSuccess").classList.remove("d-none");
+    contactForm.reset();
+
+    // Limpiar estados visuales
+    Object.values(fields).forEach(field => {
+      field.classList.remove("is-valid", "is-invalid");
+    });
+
+    setTimeout(() => {
+      document.getElementById("contactSuccess").classList.add("d-none");
+    }, 3000);
+  }
+});
+
+const { db, collection, addDoc, serverTimestamp } = window.__firebase;
+
+
