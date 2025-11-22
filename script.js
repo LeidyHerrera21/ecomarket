@@ -159,9 +159,9 @@ function generatePaymentQR(){
     qrContainer.innerHTML = '<div class="text-danger">Ingrese un número y un monto válidos.</div>';
     return;
   }
-  // Crea una carga útil fácil de usar y una carga útil «universal»; aplicaciones como Yape/Plin suelen aceptar simplemente un teléfono + importe.
+
   const payload = `PAYMENT|phone:${phone}|amount:${amount}|ref:EcoMarket-${Date.now()}`;
-  // Use qrcode.js to draw
+ 
   currentQR = new QRCode(qrContainer, { text: payload, width: 200, height:200 });
   // Mostrar también un enlace copiable (no es un enlace oficial de Yape/Plin, pero resulta útil).
   const link = document.createElement('div');
@@ -284,9 +284,11 @@ fields.topic.addEventListener("change", validateTopic);
 fields.message.addEventListener("input", validateMessage);
 
 // Enviar formulario
-contactForm.addEventListener("submit", e => {
+// Enviar formulario (MODIFICADO EN script.js)
+contactForm.addEventListener("submit", async e => {
   e.preventDefault();
 
+  // Ejecuta todas las validaciones y usa el & para asegurar que todas se ejecuten
   const validForm =
     validateName() &
     validateEmail() &
@@ -294,20 +296,21 @@ contactForm.addEventListener("submit", e => {
     validateMessage();
 
   if (validForm) {
-    document.getElementById("contactSuccess").classList.remove("d-none");
-    contactForm.reset();
+    // 1. Obtener datos antes de que se limpie el formulario
+    const data = {
+        name: fields.name.value.trim(),
+        email: fields.email.value.trim(),
+        topic: fields.topic.value,
+        message: fields.message.value.trim()
+    };
+    
+    // 2. Ejecutar la función de guardado que viene de guardar-contacto.js
+    // Esta función debe limpiar y mostrar éxito al terminar.
+    await window.submitContactForm(data);
 
     // Limpiar estados visuales
     Object.values(fields).forEach(field => {
       field.classList.remove("is-valid", "is-invalid");
     });
-
-    setTimeout(() => {
-      document.getElementById("contactSuccess").classList.add("d-none");
-    }, 3000);
   }
 });
-
-const { db, collection, addDoc, serverTimestamp } = window.__firebase;
-
-
