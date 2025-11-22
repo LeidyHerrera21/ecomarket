@@ -1,10 +1,10 @@
 // Datos del producto de demostración
 const PRODUCTS = [
-  {id: 'p1', title:'Manzana Roja Orgánica (1kg)', price: 6.50, category: 'fruta', img:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQt44MAmOguJRjxfhr5dnUHUj1twfKteG0Sv3comPjWB7T0uinvjmY0WdrBvQT-vrpiAWk&usqp=CAU'},
-  {id: 'p2', title:'Plátano orgánico (1kg)', price: 4.00, category: 'fruta', img:'https://dontorcuatomarket.com/cdn/shop/products/1_500x.png?v=1587158137'},
-  {id: 'p3', title:'Zanahoria orgánica (500g)', price: 3.00, category: 'verdura', img:'https://previews.123rf.com/images/gdolgikh/gdolgikh1709/gdolgikh170900523/86269945-fresh-organic-carrot.jpg'},
-  {id: 'p4', title:'Quinua orgánica (500g)', price: 8.00, category: 'grano', img:'https://e-an.americatv.com.pe/util-e-interesante-hallan-pesticidas-quinua-peruana-que-se-vende-como-organica-n498454-938x528-1086861.jpg'},
-  {id: 'p5', title:'Lechuga orgánica', price: 2.50, category: 'verdura', img:'https://www.gastronomiavasca.net/uploads/image/file/3381/lechuga.jpg'},
+  {id: 'p1', title:'Manzana Roja (1kg)', price: 6.50, category: 'fruta', img:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQt44MAmOguJRjxfhr5dnUHUj1twfKteG0Sv3comPjWB7T0uinvjmY0WdrBvQT-vrpiAWk&usqp=CAU'},
+  {id: 'p2', title:'Plátano (1kg)', price: 4.00, category: 'fruta', img:'https://dontorcuatomarket.com/cdn/shop/products/1_500x.png?v=1587158137'},
+  {id: 'p3', title:'Zanahoria  (500g)', price: 3.00, category: 'verdura', img:'https://previews.123rf.com/images/gdolgikh/gdolgikh1709/gdolgikh170900523/86269945-fresh-organic-carrot.jpg'},
+  {id: 'p4', title:'Quinua  (500g)', price: 8.00, category: 'grano', img:'https://e-an.americatv.com.pe/util-e-interesante-hallan-pesticidas-quinua-peruana-que-se-vende-como-organica-n498454-938x528-1086861.jpg'},
+  {id: 'p5', title:'Lechuga', price: 2.50, category: 'verdura', img:'https://www.gastronomiavasca.net/uploads/image/file/3381/lechuga.jpg'},
   {id: 'p6', title:'Inka kola en lata ', price: 1.00, category: 'bebidas', img:'https://thumbs.dreamstime.com/b/un-taz%C3%B3n-lleno-de-latas-peruanas-inca-kola-la-haya-pa%C3%ADses-bajos-abril-una-las-bebidas-m%C3%A1s-populares-en-per%C3%BA-es-probablemente-160359740.jpg'},
   {id: 'p7', title:'Arroz ', price: 2.00, category: 'grano', img:'https://cofepasa.com/wp-content/uploads/2021/04/arroz-portal.jpg'},
   {id: 'p8', title:'Maiz', price: 3.00, category: 'grano', img:'https://humanidades.com/wp-content/uploads/2018/10/maiz-2-1-e1581908276964.jpg'},
