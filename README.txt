@@ -1,4 +1,4 @@
-# 🛒 EcoMarket - Tienda de Productos Orgánicos
+ # 🛒 EcoMarket - Tienda de Productos Orgánicos
 
 Bienvenido al repositorio de EcoMarket, un ecommerce de ejemplo enfocado en la venta de productos orgánicos y frescos. 
 Este proyecto está desarrollado utilizando HTML, Bootstrap 5 y JavaScript puro, con una implementación robusta para la gestión de formularios de contacto usando Google Cloud Firestore (Firebase).
