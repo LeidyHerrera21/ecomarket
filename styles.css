@@ -1,19 +1,19 @@
 :root{
-  --eco-green: #2c9b58;
-  --eco-accent: #f4f7f2;
+  --eco-green: #2c9b58; /* Color  principal*/
+  --eco-accent: #f4f7f2; /* Color claro de acento */
 }
-body{font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background: #fff;}
+body{font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background: #fff;} /* Fuente moderna */
 .hero{background: linear-gradient(90deg,#2c9b58 0%, #2c9b58cc 60%);}
 .hero .lead, .hero h1{color: #000000;}
 .btn-eco{background:var(--eco-green); color:#fff; border-radius:18px; padding:.5rem 1rem;}
 .hero-img{max-width:320px;}
-.card-product{border:none; border-radius:12px; box-shadow:0 6px 18px rgba(0,0,0,.06);}
-.price{font-weight:700; color:var(--eco-green);}
+.card-product{border:none; border-radius:12px; box-shadow:0 6px 18px rgba(0,0,0,.06);} /* Tarjetas con bordes */
+.price{font-weight:700; color:var(--eco-green);} /* Precio en verde y en negrita */
 .form-control:focus{box-shadow:0 0 0 .2rem rgba(44,155,88,.18); border-color:var(--eco-green);}
 
 
 .search-button { 
-    margin-right: 10px; 
-}
+    margin-right: 10px;  /* Espacio entre el botón y el input */
+} 
 
-@media (max-width:576px){ .hero{padding:2rem 1rem;} .hero-img{display:none;} }
+@media (max-width:576px){ .hero{padding:2rem 1rem;} .hero-img{display:none;} } /* Ajusta el padding en pantallas pequeñas y Oculta imagen en móviles para mejor diseño */ 
